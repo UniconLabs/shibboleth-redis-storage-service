@@ -1,0 +1,9 @@
+apply from: 'gradle/shibboleth.gradle'
+
+repositories {
+    jcenter()
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = project.'gradle.version'
+}
