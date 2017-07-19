@@ -1,7 +1,28 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'distribution'
+    id 'com.jfrog.bintray' version '1.6'
+    id 'net.researchgate.release' version '2.4.0'
+}
+
 apply from: 'gradle/shibboleth.gradle'
 
 repositories {
+    maven { url 'https://build.shibboleth.net/nexus/content/groups/public' }
     jcenter()
+}
+
+dependencies {
+    compileOnly "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}"
+    compileOnly "ch.qos.logback:logback-core:${project.'logback.version'}"
+
+    compile "org.redisson:redisson:${project.'redisson.version'}"
+
+    testCompile "net.shibboleth.idp:idp-authn-api:${project.'shibboleth.version'}"
+    testCompile "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}:tests@jar"
+    testCompile "junit:junit:4.12"
+    testCompile "org.testng:testng:6.9.9"
 }
 
 task wrapper(type: Wrapper) {
