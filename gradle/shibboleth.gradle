@@ -11,9 +11,11 @@ buildscript {
 apply plugin: 'war'
 
 repositories {
-    mavenLocal()
     jcenter()
-    maven { url 'https://build.shibboleth.net/nexus/content/groups/public' }
+    maven {
+        url 'https://build.shibboleth.net/nexus/content/groups/public'
+
+    }
 }
 
 configurations {
@@ -38,9 +40,11 @@ task unpackShibboleth {
     doLast {
         copy {
             from tarTree(resources.gzip(configurations.shibboleth[0]))
-            into temporaryDir
+            into "${temporaryDir}/shibboleth-idp"
+            eachFile { f ->
+                f.path = f.path.substring(f.path.indexOf('/') + 1)
+            }
         }
-        temporaryDir.listFiles().find {it.isDirectory()}.renameTo(new File(temporaryDir, 'shibboleth-idp'))
     }
 }
 
@@ -243,29 +247,5 @@ task generateMetadata(dependsOn: 'generateSelfSignedCerts') {
     }
 }
 
-//Clean docker containers
-task cleanDockerImage(type:Exec) {
-    dependsOn clean
-    group = 'docker'
-    commandLine 'docker', 'stop', '-f', '/shib-local-test'
-    commandLine 'docker', 'rm', '-f', '/shib-local-test'
-
-}
-
-task buildDockerImage(type:Exec) {
-    dependsOn clean
-    dependsOn unpackShibboleth
-    group = 'docker'
-//    def variable = {commandLine 'docker ps'}
-    commandLine 'docker', 'build', '-t', 'unicon/shibboleth-idp', '--build-arg', "version=${project.'version'}", '.'
-}
-
-task runDockerImage(type:Exec) {
-    dependsOn buildDockerImage
-    group = 'docker'
-    //commandLine 'docker', 'run', '-d', '-p 443:4443', '--name', 'shib-local-test', 'unicon/shibboleth-idp'
-    commandLine 'docker', 'run', '-d', '--name', 'shib-local-test', 'unicon/shibboleth-idp'
-}
-
-    tasks.war.dependsOn 'overlay'
-    webAppDirName = "${unpackShibboleth.outputs.files[0]}/webapp"
+tasks.war.dependsOn 'overlay'
+webAppDirName = "${unpackShibboleth.outputs.files[0]}/webapp"
