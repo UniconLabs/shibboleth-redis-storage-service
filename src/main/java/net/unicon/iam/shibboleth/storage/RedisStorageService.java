@@ -145,7 +145,10 @@ public class RedisStorageService extends AbstractStorageService {
 
     @Override
     public void updateContextExpiration(@Nonnull String context, @Nullable Long expiration) throws IOException {
-
+        RMapCache map = this.client.getMapCache(context);
+        for (Object key : map.keySet()) {
+            this.updateExpiration(context, (String) key, expiration);
+        }
     }
 
     @Override
