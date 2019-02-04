@@ -4,6 +4,7 @@ plugins {
     id 'distribution'
     id 'com.jfrog.bintray' version '1.6'
     id 'net.researchgate.release' version '2.6.0'
+    id 'com.avast.gradle.docker-compose' version '0.8.0'
 }
 
 apply from: 'gradle/shibboleth.gradle'
@@ -29,4 +30,20 @@ test {
     useTestNG()
     scanForTestClasses = false
     include 'net/unicon/iam/shibboleth/**/*'
+}
+
+/*
+ * Docker Compose (gradle-docker-compose-plugin) settings.
+ * Used to start and stop docker containers before running tests.
+ */
+apply plugin: 'docker-compose'
+dockerCompose {
+    useComposeFiles = ['./src/test/docker/docker-compose.yml']
+    captureContainersOutput = true
+    waitForTcpPorts = false
+}
+
+test {
+    dependsOn 'composeUp'
+    finalizedBy 'composeDown'
 }
