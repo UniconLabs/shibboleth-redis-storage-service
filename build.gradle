@@ -1,10 +1,13 @@
+import groovy.swing.SwingBuilder
+
 plugins {
     id 'java'
     id 'idea'
     id 'distribution'
     id 'com.jfrog.bintray' version '1.6'
-    id 'net.researchgate.release' version '2.6.0'
     id 'com.avast.gradle.docker-compose' version '0.8.0'
+    id 'net.researchgate.release' version '2.7.0'
+    id 'signing'
 }
 
 apply from: 'gradle/shibboleth.gradle'
@@ -26,10 +29,31 @@ dependencies {
     testCompile "org.testng:testng:6.9.9"
 }
 
-test {
-    useTestNG()
-    scanForTestClasses = false
-    include 'net/unicon/iam/shibboleth/**/*'
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.allTasks.any { it instanceof Sign }) {
+        def console = System.console()
+        def password
+        if (console == null) {
+            new SwingBuilder().edt {
+                dialog(modal: true, title: 'Enter password', alwaysOnTop: true, resizable: false, locationRelativeTo: null, pack: true, show: true) {
+                    vbox {
+                        label(text: 'PGP Private Key Password:')
+                        def input = passwordField()
+                        button(defaultButton: true, text: 'OK', actionPerformed: {
+                            password = input.password
+                            dispose()
+                        })
+                    }
+                }
+            }
+        } else {
+            password = console.readPassword('PGP Private Key Password: ')
+        }
+
+        allprojects {
+            ext.'signing.password' = "$password"
+        }
+    }
 }
 
 /*
@@ -44,6 +68,43 @@ dockerCompose {
 }
 
 test {
+    useTestNG()
+    scanForTestClasses = false
+    include 'net/unicon/iam/shibboleth/**/*'
     dependsOn 'composeUp'
     finalizedBy 'composeDown'
+}
+
+distributions {
+    main {
+        contents {
+            duplicatesStrategy = 'exclude'
+            into ('edit-webapp/WEB-INF/lib') {
+                from { project.jar }
+                from { project.configurations.compile }
+            }
+        }
+    }
+}
+
+bintray {
+    user = bintrayUsername
+    key = bintrayAPIKey
+    pkg {
+        repo = 'generic'
+        name = rootProject.name
+        userOrg = 'uniconiam'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/UniconLabs/shibboleth-redis-storage-service.git'
+        version {
+            name = project.version
+        }
+        configurations = ['archives']
+    }
+}
+
+afterReleaseBuild.dependsOn bintrayUpload
+
+signing {
+    sign configurations.archives
 }
