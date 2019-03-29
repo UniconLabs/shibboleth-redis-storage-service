@@ -8,6 +8,7 @@ The Shibboleth Identity Provider web application built using a Gradle overlay. (
 
 - JDK 8+
 - Tomcat 8+
+- Docker (if running tests)
 
 ## Initial Setup
 
@@ -25,6 +26,12 @@ Run afterwards:
 ./gradlew build overlay
 ```
 
+### Tests
+
+Tests are run against a dockerized redis server. This server is spun up automatically via docker-compose when the `test`
+gradle task is executed. If, for some reason, you don't want this to occur, simply skip the tests by appending `-x test`
+to the above build commands.
+ 
 ## IntelliJ IDEA
 
 Create a Run Configuration based on a Tomcat server. If you don't have a Tomcat instance available, [download one](https://tomcat.apache.org/) 
@@ -104,4 +111,41 @@ then run the `cleanDockerImage` task below before running this task again:
 Stop and remove the docker image if it is running.
 ```bash
 ./gradlew cleanDockerImage
+```
+
+## Signing and Releasing Builds
+
+### Signing
+Signing a build is done with the Gradle signing plugin. You'll need to create the proper keys before proceeding. See
+[this article](https://docs.gradle.org/current/userguide/signing_plugin.html#sec:signatory_credentials) on how to do so.
+Once that has been accomplished, add the following to your `<home directory>/.gradle/gradle.properties`:
+```properties
+signing.keyId=<last 8 characters of your key id>
+signing.secretKeyRingFile=<home directory>/.gnupg/secring.gpg
+```
+Then, run the following to generate the archives and sign them:
+```bash
+./gradlew distZip sign
+```
+Note: This command will prompt you for your private key password. 
+
+### Releasing
+Releases are performed using the researchgate gradle-release plugin and are published to bintray using the JFrog
+gradle-bintray-plugin. Performing a release is as simple as:
+```bash
+./gradlew release
+```
+and responding to the prompts.
+
+### Publishing
+
+To publish a release to Bintray, acquire the project's bintray username and API key. Add these values to your user's
+`<home directory>/.gradle/gradle.properties`:
+```text
+bintrayUsername=<some usernmame>
+bintrayAPIKey=<some API key>
+```
+Then, execute the following task to upload:
+```bash
+./gradlew bintrayUpload
 ```
