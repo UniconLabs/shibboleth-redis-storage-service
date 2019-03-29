@@ -21,7 +21,7 @@ dependencies {
     compileOnly "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}"
     compileOnly "ch.qos.logback:logback-core:${project.'logback.version'}"
 
-    compile "org.redisson:redisson:${project.'redisson.version'}"
+    implementation "org.redisson:redisson:${project.'redisson.version'}"
 
     testCompile "net.shibboleth.idp:idp-authn-api:${project.'shibboleth.version'}"
     testCompile "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}:tests@jar"
@@ -81,7 +81,7 @@ distributions {
             duplicatesStrategy = 'exclude'
             into ('edit-webapp/WEB-INF/lib') {
                 from { project.jar }
-                from { project.configurations.compile }
+                from { project.configurations.runtimeClasspath }
             }
         }
     }

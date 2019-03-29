@@ -21,13 +21,10 @@ repositories {
 configurations {
     shibboleth
     shibbolethAntTasks
-
-    provided
-    compile.extendsFrom provided
 }
 
 dependencies {
-    provided "net.shibboleth.idp:idp-distribution:${project.'shibboleth.version'}"
+    compileOnly "net.shibboleth.idp:idp-distribution:${project.'shibboleth.version'}"
     shibboleth "net.shibboleth.idp:idp-distribution:${project.'shibboleth.version'}@tar.gz"
 
     shibbolethAntTasks "net.shibboleth.idp:idp-installer:${project.'shibboleth.version'}"
