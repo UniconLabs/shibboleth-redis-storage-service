@@ -20,6 +20,10 @@ public class RedisStorageService extends AbstractStorageService {
 
     public RedisStorageService(final RedissonClient client) {
         this.client = client;
+
+        this.setContextSize(Integer.MAX_VALUE);
+        this.setKeySize(Integer.MAX_VALUE);
+        this.setValueSize(Integer.MAX_VALUE);
     }
 
     private long getSystemExpiration(Long expiration) {
