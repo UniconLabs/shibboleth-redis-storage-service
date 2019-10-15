@@ -35,33 +35,6 @@ dependencies {
     testCompile "org.testng:testng:6.9.9"
 }
 
-gradle.taskGraph.whenReady { taskGraph ->
-    if (taskGraph.allTasks.any { it instanceof Sign }) {
-        def console = System.console()
-        def password
-        if (console == null) {
-            new SwingBuilder().edt {
-                dialog(modal: true, title: 'Enter password', alwaysOnTop: true, resizable: false, locationRelativeTo: null, pack: true, show: true) {
-                    vbox {
-                        label(text: 'PGP Private Key Password:')
-                        def input = passwordField()
-                        button(defaultButton: true, text: 'OK', actionPerformed: {
-                            password = input.password
-                            dispose()
-                        })
-                    }
-                }
-            }
-        } else {
-            password = console.readPassword('PGP Private Key Password: ')
-        }
-
-        allprojects {
-            ext.'signing.password' = "$password"
-        }
-    }
-}
-
 /*
  * Docker Compose (gradle-docker-compose-plugin) settings.
  * Used to start and stop docker containers before running tests.
