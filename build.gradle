@@ -7,7 +7,7 @@ plugins {
     id 'com.jfrog.bintray' version '1.8.4'
     id 'com.avast.gradle.docker-compose' version '0.8.0'
     id 'net.researchgate.release' version '2.7.0'
-    id 'signing'
+    // id 'signing'
 }
 
 apply from: 'gradle/shibboleth.gradle'
@@ -84,6 +84,8 @@ bintray {
 
 afterReleaseBuild.dependsOn bintrayUpload
 
+/*
 signing {
     sign configurations.archives
 }
+ */
