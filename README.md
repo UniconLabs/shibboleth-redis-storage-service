@@ -16,7 +16,11 @@ to download either the `.tar` or `.zip` file.
 1. Add storage service bean to `global.xml`. For example:
 
         <bean id="my.RedisStorageService"
-              class="net.unicon.iam.shibboleth.storage.RedisStorageService">
+              class="net.unicon.iam.shibboleth.storage.RedisStorageService"
+              xmlns:redisson="http://redisson.org/schema/redisson"
+              xsi:schemaLocation="
+                     http://redisson.org/schema/redisson
+                     http://redisson.org/schema/redisson/redisson.xsd">
             <constructor-arg name="client">
                 <!-- https://github.com/redisson/redisson/wiki/14.-Integration%20with%20frameworks -->
                 <redisson:client>
