@@ -10,8 +10,6 @@ plugins {
     // id 'signing'
 }
 
-apply from: 'gradle/shibboleth.gradle'
-
 repositories {
     maven { url 'https://build.shibboleth.net/nexus/content/groups/public' }
     jcenter()
@@ -20,6 +18,9 @@ repositories {
 dependencies {
     compileOnly "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}"
     compileOnly "ch.qos.logback:logback-core:${project.'logback.version'}"
+
+    implementation platform("net.shibboleth.idp:idp-parent:${project.'shibboleth.version'}")
+    implementation platform("org.opensaml:opensaml-parent:${project.'opensaml.version'}")
 
     implementation "org.redisson:redisson:${project.'redisson.version'}", {
         exclude module: 'jackson-annotations'
@@ -33,6 +34,9 @@ dependencies {
     testCompile "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}:tests@jar"
     testCompile "junit:junit:4.12"
     testCompile "org.testng:testng:6.9.9"
+
+    testRuntime 'com.fasterxml.jackson.core:jackson-core'
+    testRuntime 'com.fasterxml.jackson.core:jackson-databind'
 }
 
 /*
