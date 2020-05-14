@@ -1,13 +1,14 @@
-import groovy.swing.SwingBuilder
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 
 plugins {
     id 'java'
     id 'idea'
     id 'distribution'
     id 'com.jfrog.bintray' version '1.8.4'
-    id 'com.avast.gradle.docker-compose' version '0.8.0'
+    id 'com.avast.gradle.docker-compose' version '0.10.10'
     id 'net.researchgate.release' version '2.7.0'
     // id 'signing'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 repositories {
@@ -39,11 +40,6 @@ dependencies {
     testRuntime 'com.fasterxml.jackson.core:jackson-databind'
 }
 
-/*
- * Docker Compose (gradle-docker-compose-plugin) settings.
- * Used to start and stop docker containers before running tests.
- */
-apply plugin: 'docker-compose'
 dockerCompose {
     useComposeFiles = ['./src/test/docker/docker-compose.yml']
     captureContainersOutput = true
@@ -87,6 +83,20 @@ bintray {
 }
 
 afterReleaseBuild.dependsOn bintrayUpload
+
+task relocateShadowJar(type: ConfigureShadowRelocation) {
+    target = tasks.shadowJar
+    prefix = 'net.unicon.iam.shibboleth.storage.redis'
+}
+
+tasks.shadowJar.dependsOn tasks.relocateShadowJar
+
+shadowJar {
+    mergeServiceFiles()
+    append('META-INF/spring.schemas')
+    append('META-INF/spring.tooling')
+    append('META-INF/spring.factories')
+}
 
 /*
 signing {

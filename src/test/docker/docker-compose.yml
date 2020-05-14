@@ -4,3 +4,15 @@ services:
     image: redis
     ports:
       - '6379:6379'
+    networks:
+    - backend
+  idp:
+    build: idp
+    ports:
+    - 443:443
+    networks:
+    - backend
+    volumes:
+    - ../../../build/libs/shibboleth-redis-storage-service-2.0.0-SNAPSHOT-all.jar:/opt/shibboleth-idp/edit-webapp/WEB-INF/lib/shibboleth-redis-storage-service-2.0.0-SNAPSHOT-all.jar
+networks:
+  backend:
