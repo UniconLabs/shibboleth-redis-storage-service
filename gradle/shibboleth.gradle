@@ -126,7 +126,7 @@ task generateSealerKey(dependsOn: 'processIdpProperties') {
 
 ant.taskdef(
         name: 'selfsignedcert',
-        classname: 'net.shibboleth.idp.installer.ant.SelfSignedCertificateGeneratorTask',
+        classname: 'net.shibboleth.idp.installer.ant.impl.SelfSignedCertificateGeneratorTask',
         classpath: configurations.shibbolethAntTasks.asPath
 )
 

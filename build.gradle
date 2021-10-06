@@ -18,6 +18,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly "net.shibboleth.idp:idp-admin-api:${project.'shibboleth.version'}"
+    compileOnly "net.shibboleth.idp:idp-admin-impl:${project.'shibboleth.version'}"
     compileOnly "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}"
     compileOnly "ch.qos.logback:logback-core:${project.'logback.version'}"
 
