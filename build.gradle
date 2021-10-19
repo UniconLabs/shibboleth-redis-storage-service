@@ -4,7 +4,6 @@ plugins {
     id 'java'
     id 'idea'
     id 'distribution'
-    id 'com.jfrog.bintray' version '1.8.4' // NO LONGER AVAILABLE
     id 'com.avast.gradle.docker-compose' version '0.8.0'
     id 'net.researchgate.release' version '2.7.0'
     id 'signing'
@@ -63,7 +62,6 @@ jar {
 
     }
 }
-
 jar.finalizedBy("buildPluginArtifacts")
 
 task buildPluginArtifacts(type: GradleBuild, dependsOn: ['clean', 'jar']) {
@@ -100,6 +98,10 @@ task buildPluginArtifacts(type: GradleBuild, dependsOn: ['clean', 'jar']) {
     }
 }
 
+signing {
+    sign configurations.archives
+}
+
 /*
  * Docker Compose (gradle-docker-compose-plugin) settings.
  * Used to start and stop docker containers before running tests.
@@ -118,27 +120,3 @@ test {
     dependsOn 'composeUp'
     finalizedBy 'composeDown'
 }
-
-/*
-bintray {
-    user = bintrayUsername
-    key = bintrayAPIKey
-    pkg {
-        repo = 'generic'
-        name = rootProject.name
-        userOrg = 'uniconiam'
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/UniconLabs/shibboleth-redis-storage-service.git'
-        version {
-            name = project.version
-        }
-        configurations = ['archives']
-    }
-}
-
-afterReleaseBuild.dependsOn bintrayUpload
-
-signing {
-    sign configurations.archives
-}
- */
