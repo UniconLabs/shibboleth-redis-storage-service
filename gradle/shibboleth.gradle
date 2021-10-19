@@ -29,6 +29,8 @@ dependencies {
 
     shibbolethAntTasks "net.shibboleth.idp:idp-installer:${project.'shibboleth.version'}"
     shibbolethAntTasks "org.bouncycastle:bcpkix-jdk15on:${project.'bouncycastle.version'}"
+    shibbolethAntTasks "net.shibboleth.utilities:java-support:8.2.1"
+
 }
 
 task unpackShibboleth {
@@ -113,7 +115,7 @@ task generateSealerKey(dependsOn: 'processIdpProperties') {
     doLast {
         file("build/overlay/credentials").mkdirs()
         if (!(copyOverlayFile('credentials/sealer.jks') && copyOverlayFile('credentials/sealer.kver'))) {
-            ant.taskdef(name: 'sealer', classname: 'net.shibboleth.idp.installer.ant.BasicKeystoreKeyStrategyTask', classpath: configurations.shibbolethAntTasks.asPath)
+            ant.taskdef(name: 'sealer', classname: 'net.shibboleth.idp.installer.ant.impl.BasicKeystoreKeyStrategyTask', classpath: configurations.shibbolethAntTasks.asPath)
             ant.sealer(
                     keystoreFile: sealerKeystore,
                     versionFile: sealerKeyVersion,

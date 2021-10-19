@@ -1,10 +1,9 @@
-package net.unicon.iam.shibboleth.storage;
-
+package net.unicon.iam.shibboleth.storage.redis;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import org.opensaml.storage.StorageRecord;
 import org.opensaml.storage.StorageService;
-import org.opensaml.storage.StorageServiceTest;
+import org.opensaml.storage.testing.StorageServiceTest;
 import org.redisson.Redisson;
 import org.redisson.config.Config;
 import org.testng.annotations.AfterClass;

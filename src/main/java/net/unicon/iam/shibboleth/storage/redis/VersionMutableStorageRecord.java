@@ -1,4 +1,4 @@
-package net.unicon.iam.shibboleth.storage;
+package net.unicon.iam.shibboleth.storage.redis;
 
 import org.opensaml.storage.MutableStorageRecord;
 

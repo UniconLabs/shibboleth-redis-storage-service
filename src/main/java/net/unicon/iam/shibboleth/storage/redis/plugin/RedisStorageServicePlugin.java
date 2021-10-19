@@ -1,4 +1,4 @@
-package net.unicon.iam.shibboleth.storage.plugin;
+package net.unicon.iam.shibboleth.storage.redis.plugin;
 
 import net.shibboleth.idp.plugin.PluginException;
 import net.shibboleth.idp.plugin.PropertyDrivenIdPPlugin;

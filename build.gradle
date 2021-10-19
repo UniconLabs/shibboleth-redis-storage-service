@@ -4,10 +4,10 @@ plugins {
     id 'java'
     id 'idea'
     id 'distribution'
-    id 'com.jfrog.bintray' version '1.8.4'
+    id 'com.jfrog.bintray' version '1.8.4' // DONE
     id 'com.avast.gradle.docker-compose' version '0.8.0'
     id 'net.researchgate.release' version '2.7.0'
-    // id 'signing'
+    id 'signing'
 }
 
 apply from: 'gradle/shibboleth.gradle'
@@ -15,6 +15,7 @@ apply from: 'gradle/shibboleth.gradle'
 repositories {
     maven { url 'https://build.shibboleth.net/nexus/content/groups/public' }
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -23,6 +24,7 @@ dependencies {
     compileOnly "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}"
     compileOnly "ch.qos.logback:logback-core:${project.'logback.version'}"
 
+    implementation "commons-configuration:commons-configuration:${project.'commons-configuration.version'}"
     implementation "org.redisson:redisson:${project.'redisson.version'}", {
         exclude module: 'jackson-annotations'
         exclude module: 'jackson-core'
@@ -31,10 +33,71 @@ dependencies {
         exclude module: 'slf4j-api'
     }
 
-    testCompile "net.shibboleth.idp:idp-authn-api:${project.'shibboleth.version'}"
-    testCompile "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}:tests@jar"
-    testCompile "junit:junit:4.12"
-    testCompile "org.testng:testng:6.9.9"
+    testImplementation "net.shibboleth.idp:idp-authn-api:${project.'shibboleth.version'}"
+    testImplementation "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}:tests@jar"
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.testng:testng:7.4.0"
+    testImplementation "com.fasterxml.jackson.core:jackson-core:2.12.2"
+    testImplementation "com.fasterxml.jackson.core:jackson-databind:2.12.2"
+}
+
+processResources {
+    from ('src/main/java') {
+        include "**/*.properties"
+    }
+}
+
+clean {
+    delete (layout.projectDirectory.dir("src/dist/bootstrap/plugin.properties"))
+    delete fileTree(layout.projectDirectory.dir("src/dist/webapp/WEB-INF/lib")) {
+        include "**/*.jar"
+    }
+}
+
+jar {
+    manifest {
+        attributes "Name": "net/unicon/iam/shibboleth/storage/redis/plugin/",
+                   "Implementation-Vendor": "unicon.net",
+                   "Implementation-Version": "${project.version}",
+                   "Implementation-Title": "${project.name}"
+
+    }
+}
+
+jar.finalizedBy("buildPluginArtifacts")
+
+task buildPluginArtifacts(type: GradleBuild, dependsOn: ['clean', 'jar']) {
+    group 'Build'
+    description 'Build the deployable artifacts for the plugin'
+
+    copy {
+        from layout.projectDirectory.dir("src/main/java/net/unicon/iam/shibboleth/storage/redis/plugin/plugin.properties")
+        into layout.projectDirectory.dir("src/dist/bootstrap")
+    }
+    copy {
+        from layout.buildDirectory.dir("libs/${project.name}-${project.version}.jar")
+        into layout.projectDirectory.dir("src/dist/webapp/WEB-INF/lib")
+    }
+    copy {
+        from { project.configurations.runtimeClasspath }
+        into ('src/dist/webapp/WEB-INF/lib')
+    }
+    finalizedBy distTar {
+        archivesBaseName = "${project.name}"
+        archiveExtension = 'tar.gz'
+        compression = Compression.GZIP
+
+        from layout.projectDirectory.dir("src/dist/")
+        exclude "**/.gitkeep"
+        exclude "/${project.name}-${project.version}"
+        finalizedBy distZip {
+            archivesBaseName = "${project.name}"
+
+            from layout.projectDirectory.dir("src/dist/")
+            exclude "**/.gitkeep"
+            exclude "/${project.name}-${project.version}"
+        }
+    }
 }
 
 /*
@@ -51,23 +114,12 @@ dockerCompose {
 test {
     useTestNG()
     scanForTestClasses = false
-    include 'net/unicon/iam/shibboleth/**/*'
+    include 'net/unicon/iam/shibboleth/storage/redis/**/*'
     dependsOn 'composeUp'
     finalizedBy 'composeDown'
 }
 
-distributions {
-    main {
-        contents {
-            duplicatesStrategy = 'exclude'
-            into ('edit-webapp/WEB-INF/lib') {
-                from { project.jar }
-                from { project.configurations.runtimeClasspath }
-            }
-        }
-    }
-}
-
+/*
 bintray {
     user = bintrayUsername
     key = bintrayAPIKey
@@ -86,7 +138,6 @@ bintray {
 
 afterReleaseBuild.dependsOn bintrayUpload
 
-/*
 signing {
     sign configurations.archives
 }

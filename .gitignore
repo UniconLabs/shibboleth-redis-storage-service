@@ -4,3 +4,5 @@ build
 *.iml
 .idea
 classes/
+/src/dist/bootstrap/plugin.properties
+/src/dist/webapp/WEB-INF/lib/*.jar

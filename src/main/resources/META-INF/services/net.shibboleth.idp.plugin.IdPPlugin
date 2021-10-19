@@ -1,1 +1,1 @@
-net.unicon.iam.shibboleth.storage.plugin.RedisStorageServicePlugin
+net.unicon.iam.shibboleth.storage.redis.plugin.RedisStorageServicePlugin
