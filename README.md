@@ -1,19 +1,16 @@
 # Shibboleth Identity Provider Redis Storage Service
 
-This package provides a storage service implementation for the Shibboleth IdP that is based on redis [ https://redis.io/ ].
+This package provides a storage service implementation for the Shibboleth IdP (v4.1 or later) that is based on redis [ https://redis.io/ ].
+The service is deployed as a Shibboleth Plugin (see [ https://shibboleth.atlassian.net/wiki/spaces/IDP4/pages/1294074003/PluginInstallation ])
 
 * Single bean configuration
 * Tested with AWS Elasticache
 
 ## Getting started
 
-1. Download the distribution from [ https://bintray.com/uniconiam/generic/shibboleth-redis-storage-service ]. You'll want
-to download either the `.tar` or `.zip` file.
-1. Unarchive the downloaded file.
-1. Copy `./shibboleth-redis-storage-service-{version}/edit-webapp` to Shibboleth installation directory
-(e.g., `/opt/shibboleth-idp`).
-1. Rebuild Shibboleth IdP WAR
-1. Add storage service bean to `global.xml`. For example:
+1. Download the distribution from [ TBD ]. Download either the `.tar.gz` or `.zip` file **and** the associated GPG signature file (the `.asc` file).
+2. Install the plugin following instructions at - [ https://shibboleth.atlassian.net/wiki/spaces/IDP4/pages/1294074003/PluginInstallation ]
+3. Add storage service bean to `global.xml`. For example:
 
         <bean id="my.RedisStorageService"
               class="net.unicon.iam.shibboleth.storage.RedisStorageService"
@@ -31,7 +28,8 @@ to download either the `.tar` or `.zip` file.
         </bean>
         
     For more configuration information of the bean, refer to [ https://github.com/redisson/redisson/wiki/14.-Integration%20with%20frameworks ]
-1. Set appropriate configuration in `idp.properties`. For example:
+4. Set appropriate configuration in `idp.properties`. For example (property value set to the bean id from previous step):
 
         idp.cas.StorageService=my.RedisStorageService
-1. Restart servlet container
+
+5. Restart servlet container
