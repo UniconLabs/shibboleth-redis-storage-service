@@ -4,7 +4,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'distribution'
-    id 'com.jfrog.bintray' version '1.8.4' // DONE
+    id 'com.jfrog.bintray' version '1.8.4' // NO LONGER AVAILABLE
     id 'com.avast.gradle.docker-compose' version '0.8.0'
     id 'net.researchgate.release' version '2.7.0'
     id 'signing'
@@ -35,10 +35,10 @@ dependencies {
 
     testImplementation "net.shibboleth.idp:idp-authn-api:${project.'shibboleth.version'}"
     testImplementation "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}:tests@jar"
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation "org.testng:testng:7.4.0"
-    testImplementation "com.fasterxml.jackson.core:jackson-core:2.12.2"
-    testImplementation "com.fasterxml.jackson.core:jackson-databind:2.12.2"
+    testImplementation "junit:junit:${project.'junit.version'}"
+    testImplementation "org.testng:testng:${project.'testng.version'}"
+    testImplementation "com.fasterxml.jackson.core:jackson-core:${project.'jackson.version'}"
+    testImplementation "com.fasterxml.jackson.core:jackson-databind:${project.'jackson.version'}"
 }
 
 processResources {

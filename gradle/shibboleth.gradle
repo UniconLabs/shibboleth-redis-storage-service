@@ -14,7 +14,6 @@ repositories {
     jcenter()
     maven {
         url 'https://build.shibboleth.net/nexus/content/groups/public'
-
     }
 }
 
@@ -29,7 +28,7 @@ dependencies {
 
     shibbolethAntTasks "net.shibboleth.idp:idp-installer:${project.'shibboleth.version'}"
     shibbolethAntTasks "org.bouncycastle:bcpkix-jdk15on:${project.'bouncycastle.version'}"
-    shibbolethAntTasks "net.shibboleth.utilities:java-support:8.2.1"
+    shibbolethAntTasks "net.shibboleth.utilities:java-support:${project.'shibboleth.utilities.java-support.version'}"
 
 }
 
