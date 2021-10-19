@@ -14,7 +14,6 @@ repositories {
     jcenter()
     maven {
         url 'https://build.shibboleth.net/nexus/content/groups/public'
-
     }
 }
 
@@ -29,6 +28,8 @@ dependencies {
 
     shibbolethAntTasks "net.shibboleth.idp:idp-installer:${project.'shibboleth.version'}"
     shibbolethAntTasks "org.bouncycastle:bcpkix-jdk15on:${project.'bouncycastle.version'}"
+    shibbolethAntTasks "net.shibboleth.utilities:java-support:${project.'shibboleth.utilities.java-support.version'}"
+
 }
 
 task unpackShibboleth {
@@ -113,7 +114,7 @@ task generateSealerKey(dependsOn: 'processIdpProperties') {
     doLast {
         file("build/overlay/credentials").mkdirs()
         if (!(copyOverlayFile('credentials/sealer.jks') && copyOverlayFile('credentials/sealer.kver'))) {
-            ant.taskdef(name: 'sealer', classname: 'net.shibboleth.idp.installer.ant.BasicKeystoreKeyStrategyTask', classpath: configurations.shibbolethAntTasks.asPath)
+            ant.taskdef(name: 'sealer', classname: 'net.shibboleth.idp.installer.ant.impl.BasicKeystoreKeyStrategyTask', classpath: configurations.shibbolethAntTasks.asPath)
             ant.sealer(
                     keystoreFile: sealerKeystore,
                     versionFile: sealerKeyVersion,
@@ -126,7 +127,7 @@ task generateSealerKey(dependsOn: 'processIdpProperties') {
 
 ant.taskdef(
         name: 'selfsignedcert',
-        classname: 'net.shibboleth.idp.installer.ant.SelfSignedCertificateGeneratorTask',
+        classname: 'net.shibboleth.idp.installer.ant.impl.SelfSignedCertificateGeneratorTask',
         classpath: configurations.shibbolethAntTasks.asPath
 )
 

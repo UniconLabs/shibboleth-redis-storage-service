@@ -1,4 +1,4 @@
-package net.unicon.iam.shibboleth.storage;
+package net.unicon.iam.shibboleth.storage.redis;
 
 
 import net.shibboleth.utilities.java.support.collection.Pair;
