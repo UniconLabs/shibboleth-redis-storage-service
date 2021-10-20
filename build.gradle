@@ -23,13 +23,16 @@ dependencies {
     compileOnly "org.opensaml:opensaml-storage-api:${project.'opensaml.version'}"
     compileOnly "ch.qos.logback:logback-core:${project.'logback.version'}"
 
-    implementation "commons-configuration:commons-configuration:${project.'commons-configuration.version'}"
+    implementation "commons-configuration:commons-configuration:${project.'commons-configuration.version'}", {
+        exclude module: 'commons-lang'
+    }
     implementation "org.redisson:redisson:${project.'redisson.version'}", {
         exclude module: 'jackson-annotations'
         exclude module: 'jackson-core'
         exclude module: 'jackson-databind'
         exclude module: 'javassist'
         exclude module: 'slf4j-api'
+        exclude module: 'byte-buddy'
     }
 
     testImplementation "net.shibboleth.idp:idp-authn-api:${project.'shibboleth.version'}"

@@ -33,3 +33,38 @@ The service is deployed as a Shibboleth Plugin (see [ https://shibboleth.atlassi
         idp.cas.StorageService=my.RedisStorageService
 
 5. Restart servlet container
+
+## Included libraries and dependency tree
+
+      +--- commons-configuration:commons-configuration:1.10
+      |    \--- commons-logging:commons-logging:1.1.1
+      \--- org.redisson:redisson:3.10.1
+            +--- io.netty:netty-common:4.1.32.Final
+            +--- io.netty:netty-codec:4.1.32.Final
+            |    \--- io.netty:netty-transport:4.1.32.Final
+            |         +--- io.netty:netty-buffer:4.1.32.Final
+            |         |    \--- io.netty:netty-common:4.1.32.Final
+            |         \--- io.netty:netty-resolver:4.1.32.Final
+            |              \--- io.netty:netty-common:4.1.32.Final
+            +--- io.netty:netty-buffer:4.1.32.Final (*)
+            +--- io.netty:netty-transport:4.1.32.Final (*)
+            +--- io.netty:netty-resolver-dns:4.1.32.Final
+            |    +--- io.netty:netty-resolver:4.1.32.Final (*)
+            |    +--- io.netty:netty-codec-dns:4.1.32.Final
+            |    |    \--- io.netty:netty-codec:4.1.32.Final (*)
+            |    \--- io.netty:netty-transport:4.1.32.Final (*)
+            +--- io.netty:netty-handler:4.1.32.Final
+            |    +--- io.netty:netty-buffer:4.1.32.Final (*)
+            |    +--- io.netty:netty-transport:4.1.32.Final (*)
+            |    \--- io.netty:netty-codec:4.1.32.Final (*)
+            +--- javax.cache:cache-api:1.0.0
+            +--- io.projectreactor:reactor-core:3.2.3.RELEASE
+            |    \--- org.reactivestreams:reactive-streams:1.0.2
+            +--- io.reactivex.rxjava2:rxjava:2.1.13
+            |    \--- org.reactivestreams:reactive-streams:1.0.2
+            +--- de.ruedigermoeller:fst:2.56
+            |    \--- org.objenesis:objenesis:2.5.1
+            +--- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8
+            |    \--- org.yaml:snakeyaml:1.23
+            \--- org.jodd:jodd-bean:3.7.1
+                 \--- org.jodd:jodd-core:3.7.1
