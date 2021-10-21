@@ -8,8 +8,6 @@ buildscript {
     }
 }
 
-apply plugin: 'war'
-
 repositories {
     jcenter()
     maven {
@@ -244,6 +242,3 @@ task generateMetadata(dependsOn: 'generateSelfSignedCerts') {
         file(outputFile).newOutputStream() << groovy.xml.XmlUtil.serialize(xml)
     }
 }
-
-tasks.war.dependsOn 'overlay'
-webAppDirName = "${unpackShibboleth.outputs.files[0]}/webapp"

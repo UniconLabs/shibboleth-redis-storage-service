@@ -67,7 +67,7 @@ jar {
 }
 jar.finalizedBy("buildPluginArtifacts")
 
-task buildPluginArtifacts(type: GradleBuild, dependsOn: ['clean', 'jar']) {
+task buildPluginArtifacts(type: GradleBuild) {
     group 'Build'
     description 'Build the deployable artifacts for the plugin'
 
@@ -101,6 +101,11 @@ task buildPluginArtifacts(type: GradleBuild, dependsOn: ['clean', 'jar']) {
     }
 }
 
+artifacts {
+    archives layout.buildDirectory.dir("distributions/${project.name}-${project.version}.zip")
+    archives layout.buildDirectory.dir("distributions/${project.name}-${project.version}.tar.gz")
+}
+
 signing {
     sign configurations.archives
 }
@@ -120,6 +125,6 @@ test {
     useTestNG()
     scanForTestClasses = false
     include 'net/unicon/iam/shibboleth/storage/redis/**/*'
-    dependsOn 'composeUp'
+    dependsOn 'jar', 'composeUp'
     finalizedBy 'composeDown'
 }
