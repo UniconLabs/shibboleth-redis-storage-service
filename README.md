@@ -6,6 +6,10 @@ The service is deployed as a Shibboleth Plugin (see [ https://shibboleth.atlassi
 * Single bean configuration
 * Tested with AWS Elasticache
 
+## System Requirements
+
+- Shibboleth IdP v4.1
+
 ## Getting started
 
 1. Download the distribution from [ TBD ]. Download either the `.tar.gz` or `.zip` file **and** the associated GPG signature file (the `.asc` file).
@@ -33,6 +37,10 @@ The service is deployed as a Shibboleth Plugin (see [ https://shibboleth.atlassi
         idp.cas.StorageService=my.RedisStorageService
 
 5. Restart servlet container
+
+## Licensing
+
+Licensed under the terms of the Apache License, v2. Please see [LICENSE](LICENSE) or [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0) for more information.
 
 ## Included libraries and dependency tree
 
